@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style>
+        body {
+            margin: 0%;
+            padding: 0%;
+
+        }
+
+        nav {
+            background-color: red;
+            display: flex;
+            color: white;
+            justify-content: space-around;
+        }
+
+          /*-------------SEARCH BAR------------------*/
+          
+        .container {
+            background-image: url('../images/kitchen.png');
+            /* display: flex; */
+            height: 300px;
+            background-size: cover;
+            /* background-position-y: 300px; */
+            background-repeat: no-repeat;
+
+        }
+
+        .search-bar {
+            margin-left: 45%;
+            padding-top: 100px;
+            /* width: 30px; */
+
+
+
+        }
+        input{
+            width: 20%;
+            height: 30px;
+            border-radius: 15px;
+        }
+
+        h2 {
+            color: white;
+            margin-left: 40%;
+        }
+
+        p {
+            color: white;
+            margin-left: 45%;
+        }
+        .fa-magnifying-glass{
+            background-color: orangered;
+            height: 20px;
+            /* margin-top: 20px; */
+            padding-top: 5px;
+            padding-left: 5px;
+            padding-right: 5px;
+            color: white;
+            border-radius: 20px;
+          
+        }
+        
+        /*---------------------categories------------------------------*/
+        #div3{
+        display: grid;
+            grid-template-columns: repeat(5,1fr);
+            /* grid-template-columns: auto auto auto auto auto; */
+            margin:40px; 
+             /* gap: 5px;  */
+            padding-left: 250px;
+            /* padding-right: 300px;  */
+            text-align: right;
+            
+           
+           
+        }
+        .div img{
+            width:80%;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+              
+           
+        }
+    </style>
+</head>
+
+<body>
+    <!--------------------------nav bar---------------------------------------->
+    <nav>
+
+        <h3><i class="fa-solid fa-kitchen-set"></i>MEAL FINDER</h3>
+        <h4 class="fa-solid fa-bars"></h4>
+    </nav>
+    <!----------------------------backgroung image with search bar-------------->
+    <div class="container">
+        <div class="search-bar">
+            <input type="search" id="search" placeholder="search your recipes..">
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
+        <h2>What are your favorite cuisines?</h2>
+        <p>Personalize your experience</p>
+</div>
+
+<!---------------------------------categories------------------------------------->
+<h3 style="color: black; margin-left: 20%;">CATEGORIES</h3>
+<div id="div3"></div>
+
+<script>
+      fetch('https://www.themealdb.com/api/json/v1/1/categories.php')
+      .then(response => response.json())
+      .then(data =>{
+        const categories = data.categories;
+        console.log(data);
+        data.categories.forEach(category => {
+            const ele = document.createElement('div');
+            ele.className = "div";
+            const title = document.createElement('h5');
+            title.textContent = category.strCategory;
+            const img1 = document.createElement('img');
+            img1.src = category.strCategoryThumb;
+            img1.alt = category.strCategory;
+            ele.appendChild(title);
+            ele.appendChild(img1);
+            div3.appendChild(ele);
+
+
+        });
+        
+
+      });
+</script>
+
+</body>
+
+</html>
