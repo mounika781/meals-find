@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEAL-FINDER</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+    integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+         
+        /* -----------------------------------------nav bar---------------------------------------- */
+        .header {
+            background-color: orangered;
+            display: flex;
+            align-items: center;
+            color: white;
+            padding-left: 200px;
+            /* margin-bottom: 20px; */
+            padding-top: 10px;
+            padding-bottom: 10px;
+           
+        }
+       
+        .dropdown {
+            position: relative;
+            margin-left: 900px;
+        }
+
+        .dropdown-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .fa-solid {
+            font-size: 15px;
+            color: white;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+
+        .dropdown-item {
+            padding: 10px;
+            text-decoration: none;
+            display: block;
+            background-color: white;
+            border: none;
+            text-align: left;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .dropdown-item:hover {
+            background-color: #ddd;
+        }
+
+        /*---------------------------background image search bar-----------------------------------*/
+        .container {
+            background-image: url("../images/kitchen.png");
+            height: 200px;
+            background-repeat: no-repeat;
+            background-size: cover;
+            text-align: center;
+            padding-top: 100px;
+            color: white;
+        }
+
+        input {
+            border-radius: 15px;
+            height: 35px;
+            width: 300px;
+            padding-left: 10px;
+            border: 2px solid orangered;
+        }
+
+        .fa-magnifying-glass {
+            background-color: orangered;
+            color: white;
+            padding: 8px;
+            border-radius: 50%;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+
+        /*---------------------categories------------------------------*/
+        #div3 {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            margin: 40px;
+            padding-left: 250px;
+        }
+
+        .div {
+            text-align: right;
+        }
+
+        .div img {
+            width: 80%;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.4);
+            padding: 20px;
+        }
+
+        .div h5 {
+            display: inline-block;
+            background-color: red;
+            color: white;
+            padding: 5px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+            /* -----------------------------items------------------------------------- */
+            .items-container {
+            display: flex;
+            flex-wrap: wrap;
+            margin-left: 200px;
+        }
+
+        .meal {
+            width: 200px;
+            margin: 10px;
+            text-align: center;
+        }
+
+        .meal img {
+            width: 100%;
+            border-radius: 10px;
+        }
+        /* -------------------------------integrations------------------ */
+        .meal-details {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .meal-details img {
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            /* border-radius: 10px; */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 6.2);
+        }
+
+        .meal-details ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .meal-details ul li {
+            margin: 5px 0;
+        }
+
+        .meal-details p {
+            text-align:justify;
+            max-width: 600px;
+            margin: 10px auto;
+        }
+    </style>
+</head>
+<body>
+      <!----------------------------------------------------------nav bar-------------------------------------------------------------->
+      <div class="header">
+        <a href="project-java.html"><i class="fa-solid fa-house"></i></a>
+        <div class="logo">FIND MEAL</div>
+        <div class="dropdown">
+            <button class="dropdown-btn">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <div class="dropdown-content" id="dropdown-content">
+                <!-- Food categories will be dynamically added here -->
+            </div>
+        </div>
+    </div>
+      <!------------------------------------------------search bar background picture-------------------------------------------------->
+      <div class="container">
+        <input type="search" id="search" placeholder="search recipe here....">
+        <i class="fa-solid fa-magnifying-glass" id="search-btn"></i>
+        <h2>What are your favorite cuisines?</h2>
+        <p>PERSONALIZE YOUR EXPERIENCE</p>
+    </div>
+      <!------------------------------------------------------meal categories-------------------------------------------------------------->
+      <h3 style="color: black; margin-left: 20%;">CATEGORIES</h3>
+      <div id="div3"></div>
+
+        <!------------------------------------------------------items display in categories-------------------------------------------------------------->
+     <h3 style="color: black; margin-left: 20%;">ITEMS</h3>
+     <div id="items-container" class="items-container"></div>
+
+     <script>
+        //---------------------------------------------------------------------menu-bar for dropdown------------------------------------------------------//
+        const foodCategories = ['Beef', 'Chicken', 'Dessert', 'Lamb', 'Miscellaneous', 'Pasta', 'Pork', 'Seafood', 'Side', 'Starter', 'Vegan', 'Vegetarian', 'Breakfast', 'Goat'];
+
+        // Reference to the dropdown content
+        const dropdownContent = document.getElementById('dropdown-content');
+
+        // Dynamically create food categories in the dropdown menu
+        foodCategories.forEach(food => {
+            let foodItem = document.createElement('button');
+            foodItem.className = 'dropdown-item';
+            foodItem.innerText = food;
+            dropdownContent.appendChild(foodItem);
+
+            // Add click event to show items of the clicked category from the dropdown
+            foodItem.addEventListener('click', () => showCategoryItems(food));
+        });
+
+        // Toggle dropdown display
+        document.querySelector('.dropdown-btn').addEventListener('click', function() {
+            dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
+        });
+
+        // Close dropdown if clicked outside
+        window.onclick = function(event) {
+            if (!event.target.closest('.dropdown')) {
+                dropdownContent.style.display = 'none';
+            }
+        };
+
+           //----------------------------------------------------------categories-function-----------------------------------------------------//
+           fetch('https://www.themealdb.com/api/json/v1/1/categories.php')
+        .then(response => response.json())
+        .then(data => {
+            const categories = data.categories;
+            const categoryContainer = document.getElementById('div3');
+
+            categories.forEach(category => {
+                const ele = document.createElement('div');
+                ele.className = "div";
+                const title = document.createElement('h5');
+                title.textContent = category.strCategory;
+                const img1 = document.createElement('img');
+                img1.src = category.strCategoryThumb;
+                img1.alt = category.strCategory;
+                ele.appendChild(title);
+                ele.appendChild(img1);
+                categoryContainer.appendChild(ele);
+
+                // Add click event to show items in the clicked category from the grid
+                ele.addEventListener('click', () => showCategoryItems(category.strCategory));
+            });
+        });
+
+        // Function to show items of the selected category
+        function showCategoryItems(category) {
+            fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${category}`)
+                .then(response => response.json())
+                .then(data => {
+                    const itemsContainer = document.getElementById('items-container');
+                    itemsContainer.innerHTML = '';  // Clear previous items
+                    const meals = data.meals;
+
+                    meals.forEach(meal => {
+                        const mealDiv = document.createElement('div');
+                        mealDiv.className = 'meal';
+
+                        const mealImg = document.createElement('img');
+                        mealImg.src = meal.strMealThumb;
+                        mealImg.alt = meal.strMeal;
+
+                        const mealTitle = document.createElement('h5');
+                        mealTitle.textContent = meal.strMeal;
+
+                        mealDiv.appendChild(mealImg);
+                        mealDiv.appendChild(mealTitle);
+                        itemsContainer.appendChild(mealDiv);
+                    });
+                });
+        }
+
+          // ------------------------ Search Functionality ------------------------------------//
+        // Add event listener to the search button
+        document.getElementById('search-btn').addEventListener('click', searchItems);
+
+        // Function to search items based on query
+        function searchItems() {
+            const query = document.getElementById('search').value;
+            if (query.trim() === '') {
+                alert('Please enter a search query');
+                return;
+            }
+
+            fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${query}`)
+                .then(response => response.json())
+                .then(data => {
+                    const itemsContainer = document.getElementById('items-container');
+                    itemsContainer.innerHTML = '';  // Clear previous items
+                    const meals = data.meals;
+
+                    if (meals) {
+                        meals.forEach(meal => {
+                            const mealDiv = document.createElement('div');
+                            mealDiv.className = 'meal';
+
+                            const mealImg = document.createElement('img');
+                            mealImg.src = meal.strMealThumb;
+                            mealImg.alt = meal.strMeal;
+
+                            const mealTitle = document.createElement('h5');
+                            mealTitle.textContent = meal.strMeal;
+
+                            mealDiv.appendChild(mealImg);
+                            mealDiv.appendChild(mealTitle);
+                            itemsContainer.appendChild(mealDiv);
+                            mealDiv.addEventListener('click', () => showMealDetails(meal.idMeal));
+                        });
+                    } else {
+                        itemsContainer.innerHTML = '<p>No results found.</p>';
+                    }
+                });
+        }
+
+          // ------------------------ingredients--------------------------------------//
+    // Function to show items of the selected category
+    function showCategoryItems(category) {
+        fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${category}`)
+            .then(response => response.json())
+            .then(data => {
+                const itemsContainer = document.getElementById('items-container');
+                itemsContainer.innerHTML = '';  // Clear previous items
+                const meals = data.meals;
+
+                meals.forEach(meal => {
+                    const mealDiv = document.createElement('div');
+                    mealDiv.className = 'meal';
+
+                    const mealImg = document.createElement('img');
+                    mealImg.src = meal.strMealThumb;
+                    mealImg.alt = meal.strMeal;
+
+                    const mealTitle = document.createElement('h5');
+                    mealTitle.textContent = meal.strMeal;
+
+                    mealDiv.appendChild(mealImg);
+                    mealDiv.appendChild(mealTitle);
+                    itemsContainer.appendChild(mealDiv);
+
+                    // Add click event to fetch and display meal details
+                    mealDiv.addEventListener('click', () => showMealDetails(meal.idMeal));
+                });
+            });
+    }
+
+    // Function to display meal details//
+    function showMealDetails(mealId) {
+            fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${mealId}`)
+                .then(response => response.json())
+                .then(data => {
+                    const meal = data.meals[0];
+                    const ingredients = [];
+                    for (let i = 1; i <= 20; i++) {
+                        const ingredient = meal[`strIngredient${i}`];
+                        const measure = meal[`strMeasure${i}`];
+                        if (ingredient) ingredients.push(`${measure} ${ingredient}`);
+                    }
+
+                    const itemsContainer = document.getElementById('items-container');
+                    itemsContainer.innerHTML = `
+                        <div class="meal-details">
+                            <h3>${meal.strMeal}</h3>
+                            <img src="${meal.strMealThumb}" alt="${meal.strMeal}">
+                            <h4>Ingredients</h4>
+                            <ul>${ingredients.map(ing => `<li>${ing}</li>`).join('')}</ul>
+                            <h4>Description</h4>
+                            <p>${meal.strInstructions}</p>
+                        </div>
+                    `;
+                });
+        }
+   
+        </script>
+</body>
+</html>
